@@ -6,8 +6,9 @@ module.exports = class extends Event{
             name: 'ready'
         })
     }
-    run = () => {
+    run = async() => {
         console.log(`${this.client.user.username} logado com sucesso em ${this.client.guilds.cache.size}`)
         this.client.registryCommands()
+        await this.client.connectToDatabase()
     }
 }

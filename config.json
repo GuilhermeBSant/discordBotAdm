@@ -1,3 +1,4 @@
 {
-    "token":"ODcyOTgwMDg3Mzc5NzQ2ODM4.YQxwEA.jJnwS07ak12rjSJu9-zMLL8VEmw"
+    "token":"ODcyOTgwMDg3Mzc5NzQ2ODM4.YQxwEA.jJnwS07ak12rjSJu9-zMLL8VEmw",
+    "mongo_url":"mongodb+srv://guilherme:num1488@cluster0.j8hzh.mongodb.net/reaperteste?retryWrites=true&w=majority"
 }
