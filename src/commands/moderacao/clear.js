@@ -22,7 +22,7 @@ module.exports= class clearCommand extends Command{
 
         if(!amount)return interaction.reply("❗ | Informe a quantidade de mensagens a ser deletadas!")
         if(isNaN(amount))return interaction.reply("❗ | Informe um número!")
-        if(parseInt(amount) > 99)return interaction.reply("❗ | Você só pode apagar até 99 mensagens!")
+        if(parseInt(amount) > 300)return interaction.reply("❗ | Você só pode apagar até 99 mensagens!")
         await interaction.channel.bulkDelete(parseInt(amount)+1)
         if(amount===1) return interaction.reply(`✅ | ${amount} mensagem deletada com sucesso!`).then(() => setTimeout(() => interaction.deleteReply(), 5000))
         interaction.reply(`✅ | ${amount} mensagens deletadas com sucesso!`).then(() => setTimeout(() => interaction.deleteReply(), 5000))      
