@@ -1,41 +1,44 @@
-const { MessageEmbed } = require('discord.js')
+const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
 const Command = require('../../structures/Command')
 
 module.exports = class extends Command {
     constructor(client) {
         super(client, {
-            name: 'ideia',
-            description: 'Comando feito para sugerir algo.',
-            required: true,
+            name: 'aprovar',
+            description: 'Comando feito para aprovar um jogador no formulário.',
             options: [
                 {
-                    name: 'mensagem',
+                    name: 'Id do usuário',
                     type: 'STRING',
-                    description: 'A mensagem que será enviada.',
+                    description: 'Id do usuário aprovado.',
                     required: true
                 }
             ]
         })
     }
-    run = async(interaction) => {
-        const channel = interaction.guild.channels.cache.find(c => c.id === '875487544928792616');
-        const channel2 = interaction.channel
-        let messageArgs = interaction.options.getString('mensagem')
-        let embed = new MessageEmbed()
-        .setColor('ffffff')
-        .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL({ dynamic: true }))
-        .setDescription(messageArgs);
 
-        
-        channel.send({ embeds: [embed], fetchReply: true }) 
-        .then((msg) =>{
-            msg.react('✔️'),
-            msg.react('❎'),
-            interaction.reply('✅ | Ideia enviada com sucesso!').then(() => setTimeout(() => interaction.deleteReply(), 5000))
-             
-        }).catch((err)=>{
-            throw err;
-        });
-  
+    run= async (client, message, args) => {
+        var membro = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
+    
+            if (!message.member.hasPermission('MANAGE_GUILD')) return message.lineReply(new Discord.MessageEmbed()
+        .setColor("#06A2F5")
+        .setDescription(`Você não tem a permissão: \`Gerenciar Servidor\``))
+    
+       const Embd1 = new Discord.MessageEmbed()
+    
+       .setTitle(``)
+       .setDescription(`✅ | Usuário aprovado com sucesso.`)
+       .setColor('#06A2F5')
+       .setFooter(``)
+    
+       message.lineReply(``,Embd1)
+    
+        let fab_msg = args.join(" ");
+        const dm = new Discord.MessageEmbed()
+      .setTitle(`Resultado do Formulário`)
+      .setColor('#06A2F5')
+      .setFooter(`Mensagem enviada pelo servidor ${message.guild.name}`)
+      .setDescription(`Olá, ${membro}. Parabéns, o senhor acaba de passar no formulário para a equipe ZhoenixMC, pedimos que mantenha sigilo total de coisas relacionadas a nossa equipe, pedimos também que entre em nosso discord de aprovados para que possamos continuar as etapas restantes: https://discord.gg/gB93DqS4VS`)
+      membro.send(dm);
     }
-}
+    } 

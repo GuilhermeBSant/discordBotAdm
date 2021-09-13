@@ -27,7 +27,7 @@ module.exports= class lockCommand extends Command{
             channel.permissionOverwrites.edit(role, {
             SEND_MESSAGES: false
         })
-        await interaction.reply({ embeds: [embed] })
+        await interaction.reply({ embeds: [embed] }).then(() => setTimeout(() => interaction.deleteReply(), 5000))
     }
 }
 

@@ -20,14 +20,15 @@ module.exports= class AvatarCommand extends Command{
         const user = interaction.options.getUser('membro') || interaction.author || client.users.cache.get(u => u.id === args[0])
         const username = user.username
         const avatar = user.displayAvatarURL({ size: 4096, dynamic: true})
+        
         let embed = new MessageEmbed()
         .setTitle(`Avatar de ${username}`)
-        .setImage(avatar)
+        .setImage(`${avatar}`)
         .setTimestamp()
         .setFooter(
             ' © ReaperScansBR',
             'https://imgur.com/86yaYKx.png'
         )
-        interaction.reply({ embeds: [embed] })
+        interaction.reply({ embeds: [embed]  })
     }
 }

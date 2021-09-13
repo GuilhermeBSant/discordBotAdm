@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^13.0.1",
+    "discord.js": "^13.1.0",
     "mongoose": "^5.13.7",
     "nodemon": "^2.0.12"
   }

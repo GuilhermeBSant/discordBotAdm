@@ -27,7 +27,12 @@ module.exports = class extends Command {
     run = async (interaction) => {
         if (!interaction.member.permissions.has('KICK_MEMBERS')) return interaction.reply({ content: '❗ | Você precisa de permissão para expulsar membros no servidor.', ephemeral: true })
 
-        const channel = interaction.guild.channels.cache.find(c => c.id === '876644562347626537');
+        const guildDB = await this.client.db.guilds.findById(interaction.guild.id)
+
+        if (guildDB?.log) {
+        const logChannel = interaction.guild.channels.cache.get(guildDB.log.channel)
+        if(!logChannel)return interaction.reply("❗ | Canal de logs do bot não definido!");
+
         const user = interaction.options.getUser('usuário')
         if (interaction.user.id === user.id) return interaction.reply({ content: '❗ | Você não pode se expulsar.', ephemeral: true })
 
@@ -42,7 +47,7 @@ module.exports = class extends Command {
         let embed = new MessageEmbed()
 
         .setTitle("Usuário expulsado!")
-        .addField("Alvo:", user.username)
+        .addField("Alvo:", user.toString())
         .addField("Moderator", interaction.user.tag)
         .addField("Motivo:", reason)
         .setColor('RED')
@@ -53,9 +58,10 @@ module.exports = class extends Command {
 
         interaction.guild.members.kick(user, { reason })
           .then(async() => 
-            await channel.send({ embeds: [embed] }),
-            interaction.reply(`✅ | Usuário \`${user.tag}\` expulsado com sucesso!`)
+            await logChannel?.send({ embeds: [embed] }),
+            interaction.reply(`✅ | Usuário \`${user.tag}\` expulsado com sucesso!`).then(() => setTimeout(() => interaction.deleteReply(), 5000))    
         )
             .catch(() => interaction.reply({ content: '❗ | Erro ao expulsar o usuário!', ephemeral: true }))
+        }
     }
 }

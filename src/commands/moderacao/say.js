@@ -69,12 +69,12 @@ module.exports = class sayCommand extends Command {
 
 
             canal.send({ embeds: [embed] })
-                .then(() => interaction.editReply({ content: `✅ | Mensagem enviada com sucesso no canal ${canal.toString()}.`, components: [] }))
-                .catch(() => interaction.editReply({ content: `❗ | Erro ao tentar enviar a mensagem no canal.`, components: [] }))
+                .then(() => interaction.editReply({ content: `✅ | Mensagem enviada com sucesso no canal ${canal.toString()}.`, components: [] }), setTimeout(() => interaction.deleteReply(), 5000))
+                .catch(() => interaction.editReply({ content: `❗ | Erro ao tentar enviar a mensagem no canal.`, components: [] }), setTimeout(() => interaction.deleteReply(), 5000))
         })
 
         collector.on('end', (collected, reason) => {
-            if (reason === 'time') interaction.editReply({ content: '🕛 | O tempo para informar o canal se esgotou!', components: [] })
+            if (reason === 'time') interaction.editReply({ content: '🕛 | O tempo para informar o canal se esgotou!', components: [] }).then(() => setTimeout(() => interaction.deleteReply(), 5000))    
         })
     }
 }

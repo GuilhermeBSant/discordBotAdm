@@ -19,6 +19,10 @@ module.exports= class lockCommand extends Command{
     }
 
     run = async(interaction) => {
+
+        const guildDB = await this.client.db.guilds.findById(interaction.guild.id)
+        const sugestChannel = interaction.guild.channels.cache.get(guildDB.sugest.channel)
+
         const channel = interaction.guild.channels.cache.find(c => c.id === '875487544928792616');
         const channel2 = interaction.channel
         let messageArgs = interaction.options.getString('mensagem')
@@ -28,7 +32,7 @@ module.exports= class lockCommand extends Command{
         .setDescription(messageArgs);
 
         
-        channel.send({ embeds: [embed], fetchReply: true }) 
+        sugestChannel.send({ embeds: [embed], fetchReply: true }) 
         .then((msg) =>{
             msg.react('👍'),
             msg.react('👎'),

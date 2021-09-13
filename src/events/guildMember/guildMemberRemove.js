@@ -7,9 +7,13 @@ module.exports = class extends Event {
             name: 'guildMemberRemove'
         })
     }
-    run = ((member) => {
+    run = async(member) => {
     const channelId = '876584924948353044' // logs channel
-  
+    const guildDB = await this.client.db.guilds.findById(member.guild.id)
+
+    if (guildDB?.log) {
+
+        const logChannel = member.guild.channels.cache.get(guildDB.log.channel)
 
 
         let embed = new MessageEmbed()
@@ -25,7 +29,8 @@ module.exports = class extends Event {
         )
   
       const channel = member.guild.channels.cache.get(channelId)
-      channel.send({ embeds: [embed] })
+      logChannel.send({ embeds: [embed] })
 
-})
+}
+}
   }

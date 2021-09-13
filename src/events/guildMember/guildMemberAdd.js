@@ -5,13 +5,17 @@ module.exports = class extends Event {
     constructor(client){
         super(client,{
             name: 'guildMemberAdd'
+            
         })
     }
-    run = ((member) => {
-    const channelId = '877008775083589682' // welcome channel
-    const targetChannelId = '874042756497018970' // rules and info
-  
+    run = async(member) => {
+    const guildDB = await this.client.db.guilds.findById(member.guild.id)
 
+
+    if (guildDB?.welcome) {
+
+        const welcomeChannel = member.guild.channels.cache.get(guildDB.welcome.channel)
+        const rulesChannel = member.guild.channels.cache.get(guildDB.rules.channel)
 
         let embed = new MessageEmbed()
 
@@ -23,15 +27,16 @@ module.exports = class extends Event {
         {name: `**👋 Você sabia que...**`,value: `Você é o ${member.guild.memberCount}º membro aqui no servidor?`, inline:true},
         {name: `**🎲 Precisando de ajuda?**`, value:`Caso você tenha alguma dúvida ou problema, chame a nossa equipe!`, inline:true}
         )
-        .addField('👮‍♂️ Evite punições!',`Para evitar punições visite o canal ${member.guild.channels.cache.get(targetChannelId).toString()}`)
+        .addField('👮‍♂️ Evite punições!',`Para evitar punições visite o canal ${rulesChannel}`)
         .setTimestamp()
         .setFooter(
             ' © ReaperScansBR',
             'https://imgur.com/86yaYKx.png'
         )
   
-      const channel = member.guild.channels.cache.get(channelId)
-      channel.send({ embeds: [embed] })
+      //const channel = member.guild.channels.cache.get(channelId)
+      welcomeChannel?.send({ embeds: [embed] })
 
-})
+        }
+}
   }

@@ -35,6 +35,13 @@ module.exports = class muteCommand extends Command {
     run = async (interaction, args) => {
         if (!interaction.member.permissions.has("MANAGE_MESSAGES")) return interaction.reply("❗ | Você não tem permissão para usar esse comando!");
 
+        const guildDB = await this.client.db.guilds.findById(interaction.guild.id)
+        
+        if (guildDB?.log) {
+
+        const logChannel = interaction.guild.channels.cache.get(guildDB.log.channel)    
+    
+        if(!logChannel)return interaction.reply("❗ | Canal de logs do bot não definido!");
         const target = interaction.guild.members.cache.get(interaction.options.getUser('alvo').id)
 
         if (target.id === interaction.user.id) return interaction.reply("❗ | Você não pode se mutar!")
@@ -42,8 +49,7 @@ module.exports = class muteCommand extends Command {
 
         let reason = interaction.options.getString('motivo')
 
-        const memberrole = interaction.guild.roles.cache.find(r => r.name === "Nível 0")
-        const mutedrole = interaction.guild.roles.cache.find(r => r.name === "Mutado")
+        const mutedrole = interaction.guild.roles.cache.get(guildDB.muted.role)    
 
 
         if (target.roles.cache.some(r => r.name === "Mutado")) {
@@ -54,11 +60,11 @@ module.exports = class muteCommand extends Command {
         const time = timeToMilliseconds(duracao)
 
         if (duracao) {
-            const channel = interaction.guild.channels.cache.find(c => c.id === '876644562347626537');
+
             let embed = new discord.MessageEmbed()
 
                 .setTitle("Usuário mutado!")
-                .addField("Alvo:", target.user.tag)
+                .addField("Alvo:", target.toString())
                 .addField("Moderator", interaction.user.tag)
                 .addField("Motivo:", reason)
                 .addField("Tempo:", duracao)
@@ -66,33 +72,31 @@ module.exports = class muteCommand extends Command {
                     ' © ReaperScansBR',
                     'https://imgur.com/86yaYKx.png'
                 )
-                await channel.send({ embeds: [embed] })
-                interaction.reply(`✅ | Usuário mutado com sucesso por ${duracao}!`)
+                await logChannel?.send({ embeds: [embed] })
+                interaction.reply(`✅ | Usuário mutado com sucesso por ${duracao}!`).then(() => setTimeout(() => interaction.deleteReply(), 5000))    
             setTimeout(function () {
                 target.roles.add(mutedrole)
-                target.roles.remove(memberrole)
             })
             setTimeout(() => {
                 target.roles.remove(mutedrole)
-                target.roles.add(memberrole)
             }, time)
 
         } else {
-            const channel = interaction.guild.channels.cache.find(c => c.id === '876644562347626537');
+
             let embed = new discord.MessageEmbed()
 
                 .setTitle("Usuário mutado!")
-                .addField("Alvo:", target.user.tag)
+                .addField("Alvo:", target.toString())
                 .addField("Moderator", interaction.user.tag)
                 .addField("Motivo:", reason)
                 .setFooter(
                     ' © ReaperScansBR',
                     'https://imgur.com/86yaYKx.png'
                 )
-            await channel.send({ embeds: [embed] })
-            interaction.reply('✅ | Usuário mutado com sucesso!')
+            await logChannel?.send({ embeds: [embed] })
+            interaction.reply('✅ | Usuário mutado com sucesso!').then(() => setTimeout(() => interaction.deleteReply(), 5000))    
             target.roles.add(mutedrole)
-            target.roles.remove(memberrole)
+            }
         }
     }
 }
